@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface BettingPanelProps {
   playerMoney: number;
@@ -17,17 +18,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
   onDeal,
   disabled = false,
 }) => {
+  const { t } = useLanguage();
   const [selectedBet, setSelectedBet] = useState(currentBet);
 
   useEffect(() => {
     setSelectedBet(currentBet);
   }, [currentBet]);
 
-  const betAmounts = [10, 25, 50, 100, 250, 500].filter(amount => amount <= playerMoney);
+  const betAmounts = [500, 1000, 1500, 2500, 3500, 5000].filter(amount => amount <= playerMoney);
 
   const handleBetSelect = (amount: number) => {
     if (amount > playerMoney) {
-      Alert.alert('Insufficient Funds', `You only have $${playerMoney}`);
+      Alert.alert(t.insufficientFunds, `${t.youOnlyHave} $${playerMoney}`);
       return;
     }
     setSelectedBet(amount);
@@ -36,7 +38,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
   const handleDeal = () => {
     if (selectedBet > playerMoney) {
-      Alert.alert('Insufficient Funds', `You only have $${playerMoney}`);
+      Alert.alert(t.insufficientFunds, `${t.youOnlyHave} $${playerMoney}`);
       return;
     }
     onDeal();
@@ -48,16 +50,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     
     // Chip rengini değere göre belirle
     const getChipColor = () => {
-      if (amount <= 10) return COLORS.chipWhite;
-      if (amount <= 25) return COLORS.chipRed;
-      if (amount <= 50) return COLORS.chipGreen;
-      if (amount <= 100) return COLORS.chipBlue;
-      if (amount <= 250) return COLORS.chipBlack;
-      return COLORS.chipPurple;
+      if (amount <= 500) return COLORS.chipWhite;
+      if (amount <= 1000) return COLORS.chipRed;
+      if (amount <= 1500) return COLORS.chipGreen;
+      if (amount <= 2500) return COLORS.chipBlue;
+      if (amount <= 3500) return COLORS.chipBlack;
+      if (amount <= 5000) return COLORS.chipPurple;
+      return COLORS.gold; // En yüksek miktarlar için altın renk
     };
 
     const getChipTextColor = () => {
-      if (amount <= 10) return COLORS.textDark;
+      if (amount <= 500) return COLORS.textDark;
+      if (amount >= 5000) return COLORS.textDark; // Mor chip için koyu text
       return COLORS.textLight;
     };
     
@@ -87,18 +91,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.moneyInfo}>
-        <Text style={styles.moneyLabel}>Your Money:</Text>
+        <Text style={styles.moneyLabel}>{t.yourMoney}</Text>
         <Text style={styles.moneyAmount}>${playerMoney}</Text>
       </View>
 
       <View style={styles.betInfo}>
-        <Text style={styles.betLabel}>Current Bet:</Text>
+        <Text style={styles.betLabel}>{t.currentBet}</Text>
         <Text style={styles.betAmount}>${selectedBet}</Text>
       </View>
 
       <View style={styles.chipsContainer}>
-        <Text style={styles.chipsLabel}>Select Bet Amount:</Text>
-        <View style={styles.chipsRow}>
+        <Text style={styles.chipsLabel}>{t.selectBetAmount}</Text>
+        <View style={styles.chipsGrid}>
           {betAmounts.map(amount => (
             <ChipButton key={amount} amount={amount} />
           ))}
@@ -117,7 +121,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           styles.dealButtonText,
           (disabled || selectedBet > playerMoney) && styles.dealButtonTextDisabled,
         ]}>
-          DEAL CARDS
+          {t.dealCards}
         </Text>
       </TouchableOpacity>
     </View>
@@ -126,11 +130,11 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 18,
+    padding: 12,
     backgroundColor: COLORS.feltDark,
-    borderRadius: 16,
-    marginTop: 5,
-    marginBottom: 10,
+    borderRadius: 12,
+    marginTop: 3,
+    marginBottom: 5,
     borderWidth: 2,
     borderColor: COLORS.borderLight,
   },
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   moneyLabel: {
     fontSize: 15,
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: 12,
   },
   betLabel: {
     fontSize: 15,
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
     color: COLORS.gold,
   },
   chipsContainer: {
-    marginBottom: 18,
+    marginBottom: 12,
   },
   chipsLabel: {
     fontSize: 13,
@@ -178,10 +182,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
+  chipsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+    maxWidth: '100%',
+  },
   chip: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     borderWidth: 2,
     borderColor: COLORS.textLight,
     justifyContent: 'center',
@@ -204,12 +215,12 @@ const styles = StyleSheet.create({
     borderColor: COLORS.textMuted,
   },
   chipText: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 'bold',
   },
   chipTextSelected: {
     color: COLORS.textGold,
-    fontSize: 11,
+    fontSize: 10,
   },
   chipTextDisabled: {
     color: COLORS.textMuted,

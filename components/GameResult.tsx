@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface GameResultProps {
   result: 'win' | 'lose' | 'push' | 'blackjack' | null;
@@ -9,18 +10,20 @@ interface GameResultProps {
 }
 
 const GameResult: React.FC<GameResultProps> = ({ result, winnings, onNewGame }) => {
+  const { t } = useLanguage();
+  
   if (!result) return null;
 
   const getResultText = () => {
     switch (result) {
       case 'blackjack':
-        return 'BLACKJACK!';
+        return t.blackjackWin;
       case 'win':
-        return 'YOU WIN!';
+        return t.youWin;
       case 'lose':
-        return 'YOU LOSE!';
+        return t.youLose;
       case 'push':
-        return 'PUSH!';
+        return t.push;
       default:
         return '';
     }
@@ -64,14 +67,14 @@ const GameResult: React.FC<GameResultProps> = ({ result, winnings, onNewGame }) 
         </Text>
         
         <View style={styles.winningsContainer}>
-          <Text style={styles.winningsLabel}>Winnings:</Text>
+          <Text style={styles.winningsLabel}>{t.winnings}</Text>
           <Text style={[styles.winningsAmount, { color: getWinningsColor() }]}>
             {getWinningsText()}
           </Text>
         </View>
         
         <TouchableOpacity style={styles.newGameButton} onPress={onNewGame}>
-          <Text style={styles.newGameButtonText}>NEW GAME</Text>
+          <Text style={styles.newGameButtonText}>{t.newGame}</Text>
         </TouchableOpacity>
       </View>
     </View>

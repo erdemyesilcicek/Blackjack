@@ -5,6 +5,7 @@ import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, Vi
 import { GameAction, GameState } from '../types/game';
 import { COLORS, MIN_BET } from '../utils/constants';
 import { executePlayerAction, initializeGame, playDealerTurn, startNewHand } from '../utils/gameLogic';
+import { useLanguage } from '../utils/LanguageContext';
 
 import BettingPanel from '../components/BettingPanel';
 import DealerHand from '../components/DealerHand';
@@ -15,6 +16,7 @@ import PlayerHand from '../components/PlayerHand';
 const PLAYER_MONEY_KEY = 'playerMoney';
 
 export default function Index() {
+  const { t } = useLanguage();
   const [gameState, setGameState] = useState<GameState>(initializeGame());
   
   // Load player money from storage on component mount
@@ -71,7 +73,7 @@ export default function Index() {
       const newGameState = startNewHand(gameState, gameState.currentBet);
       setGameState(newGameState);
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to deal cards');
+      Alert.alert(t.error, error instanceof Error ? error.message : t.failedToDealCards);
     }
   };
 
@@ -83,10 +85,10 @@ export default function Index() {
   const handleNewGame = () => {
     if (gameState.playerMoney < MIN_BET) {
       Alert.alert(
-        'Game Over', 
-        'You are out of money! Starting new game with fresh funds.',
+        t.gameOver, 
+        t.outOfMoney,
         [{ 
-          text: 'OK', 
+          text: t.ok, 
           onPress: async () => {
             const newGameState = initializeGame();
             setGameState(newGameState);
@@ -126,8 +128,8 @@ export default function Index() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>🃏 JackPoint</Text>
-            <Text style={styles.subtitle}>Classic Blackjack</Text>
+            <Text style={styles.title}>{t.blackjack}</Text>
+            <Text style={styles.subtitle}>{t.classicErdemApplication}</Text>
           </View>
           <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
             <Text style={styles.settingsIcon}>⚙️</Text>
@@ -148,7 +150,7 @@ export default function Index() {
               key={index}
               hand={hand}
               isActive={index === gameState.currentHandIndex && canPlayerAct}
-              title={gameState.playerHands.length > 1 ? `Hand ${index + 1}` : "Your Hand"}
+              title={gameState.playerHands.length > 1 ? `${t.hand} ${index + 1}` : t.yourHand}
               showCards={true}
             />
           ))}
@@ -170,7 +172,7 @@ export default function Index() {
         {gameState.gamePhase === 'betting' && (
           <View style={styles.statusBar}>
             <Text style={styles.statusText}>
-              Phase: {gameState.gamePhase.charAt(0).toUpperCase() + gameState.gamePhase.slice(1)}
+              {t.phase}: {gameState.gamePhase.charAt(0).toUpperCase() + gameState.gamePhase.slice(1)}
             </Text>
           </View>
         )}
@@ -189,11 +191,11 @@ export default function Index() {
         {gameState.gamePhase !== 'betting' && (
           <View style={styles.statusBar}>
             <Text style={styles.statusText}>
-              Phase: {gameState.gamePhase.charAt(0).toUpperCase() + gameState.gamePhase.slice(1)}
+              {t.phase}: {gameState.gamePhase.charAt(0).toUpperCase() + gameState.gamePhase.slice(1)}
             </Text>
             {gameState.gamePhase === 'playing' && gameState.playerHands.length > 1 && (
               <Text style={styles.statusText}>
-                Playing Hand {gameState.currentHandIndex + 1} of {gameState.playerHands.length}
+                {t.playingHand} {gameState.currentHandIndex + 1} {t.of} {gameState.playerHands.length}
               </Text>
             )}
           </View>
@@ -224,23 +226,23 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 12,
-    paddingTop: 5,
+    padding: 8,
+    paddingTop: 2,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingBottom: 10,
-    paddingHorizontal: 10,
+    paddingVertical: 6,
+    paddingBottom: 4,
+    paddingHorizontal: 8,
   },
   titleContainer: {
     flex: 1,
     alignItems: 'flex-start',
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.gold,
     textShadowColor: 'rgba(0, 0, 0, 0.7)',
@@ -248,45 +250,45 @@ const styles = StyleSheet.create({
     textShadowRadius: 6,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: COLORS.lightGold,
-    marginTop: 5,
+    marginTop: 2,
     fontStyle: 'italic',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   settingsButton: {
-    padding: 10,
+    padding: 8,
     backgroundColor: COLORS.feltDark,
-    borderRadius: 22,
-    minWidth: 44,
-    minHeight: 44,
+    borderRadius: 18,
+    minWidth: 36,
+    minHeight: 36,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: COLORS.borderLight,
   },
   settingsIcon: {
-    fontSize: 20,
+    fontSize: 18,
   },
   playerSection: {
-    minHeight: 130,
-    marginBottom: 12,
+    minHeight: 100,
+    marginBottom: 6,
   },
   statusBar: {
     backgroundColor: COLORS.feltDark,
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 8,
-    marginBottom: 5,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 4,
+    marginBottom: 4,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: COLORS.borderLight,
   },
   statusText: {
     color: COLORS.textLight,
-    fontSize: 13,
+    fontSize: 12,
     textAlign: 'center',
   },
 });

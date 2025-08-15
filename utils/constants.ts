@@ -1,7 +1,7 @@
 // Game Constants
-export const INITIAL_MONEY = 1000;
-export const MIN_BET = 10;
-export const MAX_BET = 500;
+export const INITIAL_MONEY = 10000;
+export const MIN_BET = 500;
+export const MAX_BET = 5000;
 export const BLACKJACK_PAYOUT = 1.5;
 export const DEALER_HIT_SOFT_17 = false;
 export const NUMBER_OF_DECKS = 2;

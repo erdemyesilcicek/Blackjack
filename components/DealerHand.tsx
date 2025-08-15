@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Hand } from '../types/game';
 import { CARD_SPACING, COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 import Card from './Card';
 
 interface DealerHandProps {
@@ -15,14 +16,15 @@ const DealerHand: React.FC<DealerHandProps> = ({
   hideSecondCard = false,
   gamePhase 
 }) => {
+  const { t } = useLanguage();
   const shouldHideCard = hideSecondCard && gamePhase === 'playing';
   const displayValue = shouldHideCard ? (hand.cards[0]?.value || 0) : hand.value;
 
   const getHandStatusText = () => {
     if (shouldHideCard) return "";
-    if (hand.isBusted) return "BUST!";
-    if (hand.isBlackjack) return "BLACKJACK!";
-    if (hand.value === 21) return "21!";
+    if (hand.isBusted) return t.bust;
+    if (hand.isBlackjack) return t.blackjackWin;
+    if (hand.value === 21) return t.twentyOne;
     return "";
   };
 
@@ -37,13 +39,13 @@ const DealerHand: React.FC<DealerHandProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Dealer</Text>
+        <Text style={styles.title}>{t.dealer}</Text>
         <View style={styles.valueContainer}>
           <Text style={styles.value}>
             {shouldHideCard ? '?' : displayValue}
           </Text>
           {hand.isSoft && !shouldHideCard && (
-            <Text style={styles.softIndicator}>soft</Text>
+            <Text style={styles.softIndicator}>{t.soft}</Text>
           )}
         </View>
       </View>
@@ -75,9 +77,9 @@ const DealerHand: React.FC<DealerHandProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginVertical: 10,
-    padding: 16,
-    borderRadius: 12,
+    marginVertical: 4,
+    padding: 10,
+    borderRadius: 10,
     backgroundColor: COLORS.feltDark,
     borderWidth: 1,
     borderColor: COLORS.borderLight,
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   title: {
     fontSize: 15,
@@ -113,12 +115,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 95,
+    minHeight: 80,
   },
   statusText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
-    marginTop: 8,
+    marginTop: 4,
     textAlign: 'center',
   },
 });

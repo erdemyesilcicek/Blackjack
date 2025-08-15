@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GameAction } from '../types/game';
 import { COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 
 interface GameControlsProps {
   onAction: (action: GameAction) => void;
@@ -22,6 +23,7 @@ const GameControls: React.FC<GameControlsProps> = ({
   canSurrender,
   disabled = false,
 }) => {
+  const { t } = useLanguage();
   const ActionButton: React.FC<{
     title: string;
     action: GameAction;
@@ -56,29 +58,29 @@ const GameControls: React.FC<GameControlsProps> = ({
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
         <ActionButton
-          title="HIT"
+          title={t.hit}
           action="hit"
           enabled={canHit}
         />
         <ActionButton
-          title="STAND"
+          title={t.stand}
           action="stand"
           enabled={canStand}
         />
         <ActionButton
-          title="DOUBLE"
+          title={t.double}
           action="double"
           enabled={canDouble}
           style={styles.specialButton}
         />
         <ActionButton
-          title="SPLIT"
+          title={t.split}
           action="split"
           enabled={canSplit}
           style={styles.specialButton}
         />
         <ActionButton
-          title="SURRENDER"
+          title={t.surrender}
           action="surrender"
           enabled={canSurrender}
           style={styles.dangerButton}
@@ -90,23 +92,23 @@ const GameControls: React.FC<GameControlsProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
   buttonsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 10,
+    gap: 8,
   },
   button: {
     backgroundColor: COLORS.chipBlue,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
     borderWidth: 2,
     borderColor: COLORS.textLight,
-    minWidth: 85,
+    minWidth: 75,
     alignItems: 'center',
     elevation: 4,
     shadowColor: COLORS.shadowColor,
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.textLight,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
   },
   buttonTextDisabled: {

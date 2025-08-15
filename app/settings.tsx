@@ -11,18 +11,30 @@ import {
   View
 } from 'react-native';
 import { COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 
 const PLAYER_MONEY_KEY = 'playerMoney';
 
 export default function Settings() {
+  const { t, currentLanguage, setLanguage } = useLanguage();
   const handleLanguage = () => {
     Alert.alert(
-      'Language Settings',
-      'Select your preferred language:',
+      t.languageSettings,
+      t.selectPreferredLanguage,
       [
-        { text: 'English', onPress: () => console.log('English selected') },
-        { text: 'Türkçe', onPress: () => console.log('Turkish selected') },
-        { text: 'Cancel', style: 'cancel' }
+        { 
+          text: t.english, 
+          onPress: async () => {
+            await setLanguage('en');
+          }
+        },
+        { 
+          text: t.turkish, 
+          onPress: async () => {
+            await setLanguage('tr');
+          }
+        },
+        { text: t.cancel, style: 'cancel' }
       ]
     );
   };
@@ -30,23 +42,23 @@ export default function Settings() {
   const handleTheme = () => {
     const themes = [
       {
-        name: 'Klasik Casino Teması',
-        description: 'Koyu yeşil masa arka planı\nGerçekçi kart tasarımları (kırmızı/siyah)\nAltın renkli çerçeveler ve butonlar\nCasino atmosferi (chips, felt texture)'
+        name: t.classicCasinoTheme,
+        description: t.classicCasinoThemeDesc
       },
       {
-        name: 'Modern/Minimal Tema',
-        description: 'Temiz, düz renkler\nBasit geometrik kart tasarımı\nBeyaz/gri arka plan\nFlat design butonlar\nTypography odaklı'
+        name: t.modernMinimalTheme,
+        description: t.modernMinimalThemeDesc
       },
       {
-        name: 'Dark Theme',
-        description: 'Siyah/koyu gri arka plan\nNeon renkli vurgular (mavi, yeşil)\nModern kart tasarımı\nRGB efektleri\nFuturistik görünüm'
+        name: t.darkTheme,
+        description: t.darkThemeDesc
       }
     ];
 
     // İlk olarak tema listesi göster
     Alert.alert(
-      'Theme Settings',
-      'Select your preferred theme:',
+      t.themeSettings,
+      t.selectPreferredTheme,
       [
         ...themes.map(theme => ({
           text: theme.name,
@@ -56,38 +68,38 @@ export default function Settings() {
               theme.name,
               theme.description,
               [
-                { text: 'Back', style: 'cancel', onPress: () => handleTheme() },
+                { text: t.back, style: 'cancel', onPress: () => handleTheme() },
                 { 
-                  text: 'Select This Theme', 
+                  text: t.selectThisTheme, 
                   onPress: () => console.log(`${theme.name} selected`) 
                 }
               ]
             );
           }
         })),
-        { text: 'Cancel', style: 'cancel' }
+        { text: t.cancel, style: 'cancel' }
       ]
     );
   };
 
   const handleResetGame = () => {
     Alert.alert(
-      'Reset Game',
-      'Are you sure you want to reset all game data? This will reset your money to the starting amount.',
+      t.resetGame,
+      t.resetGameConfirm,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.cancel, style: 'cancel' },
         { 
-          text: 'Reset', 
+          text: t.reset, 
           style: 'destructive',
           onPress: async () => {
             try {
               // Reset player money to default (1000)
               await AsyncStorage.removeItem(PLAYER_MONEY_KEY);
-              Alert.alert('Game Reset', 'Game data has been reset. Your money has been restored to $1000.');
+              Alert.alert(t.gameReset, t.gameResetMessage);
               router.back();
             } catch (error) {
               console.error('Error resetting game:', error);
-              Alert.alert('Error', 'Failed to reset game data.');
+              Alert.alert(t.error, t.failedToReset);
             }
           }
         }
@@ -97,28 +109,28 @@ export default function Settings() {
 
   const handleAddMoney = () => {
     Alert.alert(
-      'Add Money',
-      'Are you sure you want to add $5000 to your balance?',
+      t.addMoneyTitle,
+      t.addMoneyConfirm,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.cancel, style: 'cancel' },
         { 
-          text: 'Add $5000', 
+          text: t.addMoney, 
           onPress: async () => {
             try {
               // Get current money from storage
               const savedMoney = await AsyncStorage.getItem(PLAYER_MONEY_KEY);
-              const currentMoney = savedMoney ? JSON.parse(savedMoney) : 1000;
-              
-              // Add $5000
-              const newMoney = currentMoney + 5000;
+              const currentMoney = savedMoney ? JSON.parse(savedMoney) : 10000;
+
+              // Add $50000
+              const newMoney = currentMoney + 50000;
               
               // Save to storage
               await AsyncStorage.setItem(PLAYER_MONEY_KEY, JSON.stringify(newMoney));
               
-              Alert.alert('Money Added', `$5000 has been added to your balance. New balance: $${newMoney}`);
+              Alert.alert(t.moneyAdded, `$50000 ${t.moneyAdded.toLowerCase()}. ${t.newBalance} $${newMoney}`);
             } catch (error) {
               console.error('Error adding money:', error);
-              Alert.alert('Error', 'Failed to add money to your balance.');
+              Alert.alert(t.error, t.failedToAddMoney);
             }
           }
         }
@@ -128,9 +140,9 @@ export default function Settings() {
 
   const handleAbout = () => {
     Alert.alert(
-      'About JackPoint',
-      'JackPoint v1.0\n\nA classic Blackjack game built with React Native and Expo.\n\n© 2025 JackPoint Games',
-      [{ text: 'OK' }]
+      t.aboutJackPointTitle,
+      t.aboutJackPointText,
+      [{ text: t.ok }]
     );
   };
 
@@ -140,72 +152,94 @@ export default function Settings() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Text style={styles.backButtonText}>← Back</Text>
+            <Text style={styles.backButtonText}>{t.back}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Settings</Text>
+          <Text style={styles.title}>{t.settings}</Text>
           <View style={styles.placeholder} />
         </View>
 
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           {/* Preferences */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Preferences</Text>
+            <Text style={styles.sectionTitle}>{t.preferences}</Text>
             
             <TouchableOpacity style={styles.preferenceButton} onPress={handleLanguage}>
               <View style={styles.preferenceInfo}>
-                <Text style={styles.preferenceTitle}>🌐 Language</Text>
-                <Text style={styles.preferenceSubtitle}>Choose your preferred language</Text>
+                <Text style={styles.preferenceTitle}>{t.language}</Text>
+                <Text style={styles.preferenceSubtitle}>{t.choosePreferredLanguage}</Text>
               </View>
-              <Text style={styles.preferenceValue}>English ›</Text>
+              <Text style={styles.preferenceValue}>
+                {currentLanguage === 'tr' ? t.turkish : t.english} ›
+              </Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.preferenceButton} onPress={handleTheme}>
               <View style={styles.preferenceInfo}>
-                <Text style={styles.preferenceTitle}>🎨 Theme</Text>
-                <Text style={styles.preferenceSubtitle}>Customize your gaming experience</Text>
+                <Text style={styles.preferenceTitle}>{t.theme}</Text>
+                <Text style={styles.preferenceSubtitle}>{t.customizeGamingExperience}</Text>
               </View>
-              <Text style={styles.preferenceValue}>Klasik Casino ›</Text>
+              <Text style={styles.preferenceValue}>{t.classicCasinoTheme} ›</Text>
             </TouchableOpacity>
           </View>
 
           {/* Game Rules */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Game Rules</Text>
+            <Text style={styles.sectionTitle}>{t.gameRules}</Text>
             <View style={styles.ruleItem}>
-              <Text style={styles.ruleText}>• Dealer hits on soft 17</Text>
+              <Text style={styles.ruleText}>{t.dealerHitsSoft17}</Text>
             </View>
             <View style={styles.ruleItem}>
-              <Text style={styles.ruleText}>• Blackjack pays 3:2</Text>
+              <Text style={styles.ruleText}>{t.blackjackPays}</Text>
             </View>
             <View style={styles.ruleItem}>
-              <Text style={styles.ruleText}>• Double after split allowed</Text>
+              <Text style={styles.ruleText}>{t.doubleAfterSplitAllowed}</Text>
             </View>
             <View style={styles.ruleItem}>
-              <Text style={styles.ruleText}>• Surrender available</Text>
+              <Text style={styles.ruleText}>{t.surrenderAvailable}</Text>
+            </View>
+          </View>
+
+          {/* Gameplay Buttons */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t.gameplayButtons}</Text>
+            <View style={styles.ruleItem}>
+              <Text style={styles.ruleText}>{t.hitDescription}</Text>
+            </View>
+            <View style={styles.ruleItem}>
+              <Text style={styles.ruleText}>{t.standDescription}</Text>
+            </View>
+            <View style={styles.ruleItem}>
+              <Text style={styles.ruleText}>{t.doubleDescription}</Text>
+            </View>
+            <View style={styles.ruleItem}>
+              <Text style={styles.ruleText}>{t.splitDescription}</Text>
+            </View>
+            <View style={styles.ruleItem}>
+              <Text style={styles.ruleText}>{t.surrenderDescription}</Text>
             </View>
           </View>
 
           {/* Actions */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Actions</Text>
+            <Text style={styles.sectionTitle}>{t.actions}</Text>
             
             <TouchableOpacity style={styles.actionButton} onPress={handleAddMoney}>
-              <Text style={styles.actionButtonText}>💰 Add $5000</Text>
+              <Text style={styles.actionButtonText}>{t.addMoney}</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.actionButton} onPress={handleResetGame}>
-              <Text style={styles.actionButtonText}>Reset Game Data</Text>
+              <Text style={styles.actionButtonText}>{t.resetGameData}</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.actionButton} onPress={handleAbout}>
-              <Text style={styles.actionButtonText}>About JackPoint</Text>
+              <Text style={styles.actionButtonText}>{t.aboutJackPoint}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Version Info */}
           <View style={styles.versionContainer}>
             <Text style={styles.versionText}>JackPoint v1.0</Text>
-            <Text style={styles.versionSubtext}>Classic Blackjack Experience</Text>
+            <Text style={styles.versionSubtext}>{t.classicBlackjackExperience}</Text>
           </View>
         </ScrollView>
       </View>
@@ -273,6 +307,10 @@ const styles = StyleSheet.create({
   ruleText: {
     fontSize: 15,
     color: COLORS.textLight,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: COLORS.gold,
   },
   preferenceButton: {
     flexDirection: 'row',

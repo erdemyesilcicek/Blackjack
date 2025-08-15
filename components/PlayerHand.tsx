@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Hand } from '../types/game';
 import { CARD_SPACING, COLORS } from '../utils/constants';
+import { useLanguage } from '../utils/LanguageContext';
 import Card from './Card';
 
 interface PlayerHandProps {
@@ -14,13 +15,16 @@ interface PlayerHandProps {
 const PlayerHand: React.FC<PlayerHandProps> = ({ 
   hand, 
   isActive = false, 
-  title = "Your Hand",
+  title,
   showCards = true 
 }) => {
+  const { t } = useLanguage();
+  
+  const defaultTitle = title || t.yourHand;
   const getHandStatusText = () => {
-    if (hand.isBusted) return "BUST!";
-    if (hand.isBlackjack) return "BLACKJACK!";
-    if (hand.value === 21) return "21!";
+    if (hand.isBusted) return t.bust;
+    if (hand.isBlackjack) return t.blackjackWin;
+    if (hand.value === 21) return t.twentyOne;
     return "";
   };
 
@@ -33,10 +37,10 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
   return (
     <View style={[styles.container, isActive && styles.activeContainer]}>
       <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{defaultTitle}</Text>
         <View style={styles.valueContainer}>
           <Text style={styles.value}>{hand.value}</Text>
-          {hand.isSoft && <Text style={styles.softIndicator}>soft</Text>}
+          {hand.isSoft && <Text style={styles.softIndicator}>{t.soft}</Text>}
         </View>
       </View>
 
@@ -66,9 +70,9 @@ const PlayerHand: React.FC<PlayerHandProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginVertical: 10,
-    padding: 16,
-    borderRadius: 12,
+    marginVertical: 4,
+    padding: 10,
+    borderRadius: 10,
     backgroundColor: COLORS.feltDark,
     borderWidth: 1,
     borderColor: COLORS.borderLight,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   title: {
     fontSize: 15,
@@ -114,15 +118,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 95,
+    minHeight: 80,
   },
   card: {
     // Card spacing handled in marginLeft
   },
   statusText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
-    marginTop: 8,
+    marginTop: 4,
     textAlign: 'center',
   },
 });
