@@ -32,18 +32,18 @@ export const CARD_WIDTH = 65;
 export const CARD_HEIGHT = 90;
 export const CARD_SPACING = 12;
 
-// Colors for Classic Casino Theme
+// Colors for Purple Casino Theme
 export const COLORS = {
-  // Main casino colors - Klasik casino yeşili
-  casinoGreen: '#0F5132',        // Orijinal casino yeşili
-  darkGreen: '#0A3D26',          // Koyu gölge tonu
-  lightGreen: '#146244',         // Açık vurgu tonu
+  // Main casino colors - Mor casino teması
+  casinoGreen: '#4A148C',        // Ana mor renk (deep purple)
+  darkGreen: '#2E0854',          // Koyu mor gölge tonu
+  lightGreen: '#6A1B9A',         // Açık mor vurgu tonu
   
-  // Gold and brass - Gerçek casino altın tonları
-  gold: '#FFD700',               // Klasik altın
-  darkGold: '#DAA520',           // Koyu altın (goldenrod)
-  lightGold: '#FFF8DC',          // Açık altın (cornsilk)
-  bronzeGold: '#CD7F32',         // Bronz altın ton
+  // Gold and brass - Mor ile uyumlu altın tonları
+  gold: '#E1BEE7',               // Açık mor altın
+  darkGold: '#BA68C8',           // Orta mor (medium purple)
+  lightGold: '#F3E5F5',          // Çok açık mor
+  bronzeGold: '#9C27B0',         // Bronz mor ton
   
   // Card colors - Gerçekçi kart renkleri
   cardWhite: '#FEFEFE',          // Saf beyaz kart zemin
@@ -52,19 +52,19 @@ export const COLORS = {
   cardBack: '#1A237E',           // Koyu mavi kart arkası
   cardBackPattern: '#303F9F',    // Açık mavi desen
   
-  // Chip colors - Gerçek casino chip renkleri
-  chipBlue: '#1976D2',           // Mavi chip (5-10$)
-  chipRed: '#D32F2F',            // Kırmızı chip (25$)
-  chipGreen: '#388E3C',          // Yeşil chip (50$)
-  chipBlack: '#212121',          // Siyah chip (100$)
-  chipWhite: '#FAFAFA',          // Beyaz chip (1$)
-  chipPurple: '#7B1FA2',         // Mor chip (500$)
+  // Chip colors - Mor tema casino chip renkleri
+  chipBlue: '#7E57C2',           // Mor mavi chip (5-10$)
+  chipRed: '#AD1457',            // Koyu pembe chip (25$)
+  chipGreen: '#8E24AA',          // Mor yeşil chip (50$)
+  chipBlack: '#4A148C',          // Koyu mor chip (100$)
+  chipWhite: '#F3E5F5',          // Açık mor beyaz chip (1$)
+  chipPurple: '#9C27B0',         // Ana mor chip (500$)
   
-  // Text colors
+  // Text colors - Mor tema text renkleri
   textLight: '#FFFFFF',          // Saf beyaz
   textDark: '#1A1A1A',          // Koyu siyah
-  textMuted: '#B0BEC5',         // Gri ton
-  textGold: '#FFD700',          // Altın text
+  textMuted: '#B39DDB',         // Mor gri ton
+  textGold: '#E1BEE7',          // Mor altın text
   
   // Status colors - Casino tarzı durum renkleri
   danger: '#E53935',            // Kayıp - kırmızı
@@ -80,9 +80,9 @@ export const COLORS = {
   borderLight: 'rgba(255, 255, 255, 0.15)',
   shadowColor: '#000000',
   
-  // Active states - Altın vurgu efektleri
-  activeGlow: 'rgba(255, 215, 0, 0.15)',
-  activeGlowBorder: 'rgba(255, 215, 0, 0.4)',
+  // Active states - Mor vurgu efektleri
+  activeGlow: 'rgba(156, 39, 176, 0.15)',      // Mor glow efekti
+  activeGlowBorder: 'rgba(156, 39, 176, 0.4)', // Mor glow border
   
   // Felt texture simulation
   feltDark: 'rgba(0, 0, 0, 0.3)',
